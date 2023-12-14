@@ -9,9 +9,11 @@ const ARScene = () => {
   useEffect(() => {
     // Check if AR is supported in the browser
     if (window && window.navigator.xr) {
-      window.navigator.xr.isSessionSupported('immersive-ar').then((supported) => {
-        setIsARSupported(supported);
-      });
+      window.navigator.xr
+        .isSessionSupported("immersive-ar")
+        .then((supported) => {
+          setIsARSupported(supported);
+        });
     }
   }, []);
 
@@ -21,12 +23,17 @@ const ARScene = () => {
         <a-scene embedded arjs="sourceType: webcam;">
           <a-box position="0 0.5 0" rotation="0 45 0" color="#4CC3D9" shadow />
           <a-marker preset="hiro">
-            <a-box position="0 0.5 0" rotation="0 45 0" color="#FFC65D" shadow />
+            <a-box
+              position="0 0.5 0"
+              rotation="0 45 0"
+              color="#FFC65D"
+              shadow
+            />
           </a-marker>
           <a-entity camera></a-entity>
         </a-scene>
       ) : (
-        <p>Your browser doesn't support AR. Please use a compatible browser.</p>
+        <p>Your browser does not support AR. Please use a compatible browser.</p>
       )}
     </div>
   );
