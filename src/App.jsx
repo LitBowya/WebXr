@@ -1,89 +1,48 @@
-import React, { useEffect, useState } from "react";
-import "aframe";
+// ARScene.js
+
+import React, { useRef, useEffect } from "react";
+import { Canvas } from "@react-three/fiber";
+import * as THREE from "three";
 
 const ARScene = () => {
-  const [isARSupported, setIsARSupported] = useState(false);
-  const [hasCameraAccess, setHasCameraAccess] = useState(false);
-
-  // ... (other imports and code)
+  const arSceneRef = useRef();
 
   useEffect(() => {
-    if (navigator.xr && navigator.xr.isSessionSupported) {
-      navigator.xr.isSessionSupported("immersive-ar").then((supported) => {
-        setIsARSupported(supported);
-        if (supported) {
-          navigator.permissions
-            .query({ name: "camera" })
-            .then((permissionStatus) => {
-              if (permissionStatus.state === "granted") {
-                setHasCameraAccess(true);
-              } else {
-                const handlePermissionChange = () => {
-                  navigator.permissions
-                    .query({ name: "camera" })
-                    .then((updatedStatus) => {
-                      if (updatedStatus.state === "granted") {
-                        setHasCameraAccess(true);
-                      }
-                    });
-                };
-
-                permissionStatus.onchange = handlePermissionChange;
-                permissionStatus.addEventListener(
-                  "change",
-                  handlePermissionChange
-                );
-
-                permissionStatus
-                  .request()
-                  .then((result) => {
-                    if (result.state === "granted") {
-                      setHasCameraAccess(true);
-                    }
-                  })
-                  .catch((error) => {
-                    console.error("Error requesting camera permission:", error);
-                  });
-              }
-            });
-        }
+    if (arSceneRef.current) {
+      // Access the WebGL renderer directly
+      const renderer = new THREE.WebGLRenderer({
+        canvas: arSceneRef.current,
+        alpha: true,
       });
+
+      // Set up basic scene with a cube
+      const scene = new THREE.Scene();
+      const geometry = new THREE.BoxGeometry();
+      const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+      const cube = new THREE.Mesh(geometry, material);
+      scene.add(cube);
+
+      // Set up camera
+      const camera = new THREE.PerspectiveCamera(
+        75,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000
+      );
+      camera.position.z = 5;
+
+      // Animation loop
+      const animate = () => {
+        requestAnimationFrame(animate);
+        cube.rotation.x += 0.01;
+        cube.rotation.y += 0.01;
+        renderer.render(scene, camera);
+      };
+      animate();
     }
   }, []);
 
-  // ... (rest of your code)
-
-  return (
-    <div style={{ height: "100vh" }}>
-      {isARSupported ? (
-        hasCameraAccess ? (
-          <a-scene embedded arjs="sourceType: webcam;">
-            <a-box
-              position="0 0.5 0"
-              rotation="0 45 0"
-              color="#4CC3D9"
-              shadow
-            />
-            <a-marker preset="hiro">
-              <a-box
-                position="0 0.5 0"
-                rotation="0 45 0"
-                color="#FFC65D"
-                shadow
-              />
-            </a-marker>
-            <a-entity camera></a-entity>
-          </a-scene>
-        ) : (
-          <p>Please allow access to the camera.</p>
-        )
-      ) : (
-        <p>
-          Your browser does not support AR. Please use a compatible browser.
-        </p>
-      )}
-    </div>
-  );
+  return <canvas ref={arSceneRef} />;
 };
 
 export default ARScene;
