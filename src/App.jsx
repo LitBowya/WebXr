@@ -5,8 +5,9 @@ const ARScene = () => {
   const [isARSupported, setIsARSupported] = useState(false);
   const [hasCameraAccess, setHasCameraAccess] = useState(false);
 
+  // ... (other imports and code)
+
   useEffect(() => {
-    // Check if the browser supports WebXR and permissions
     if (navigator.xr && navigator.xr.isSessionSupported) {
       navigator.xr.isSessionSupported("immersive-ar").then((supported) => {
         setIsARSupported(supported);
@@ -17,12 +18,22 @@ const ARScene = () => {
               if (permissionStatus.state === "granted") {
                 setHasCameraAccess(true);
               } else {
-                // Request camera access if not granted
-                permissionStatus.onchange = () => {
-                  if (permissionStatus.state === "granted") {
-                    setHasCameraAccess(true);
-                  }
+                const handlePermissionChange = () => {
+                  navigator.permissions
+                    .query({ name: "camera" })
+                    .then((updatedStatus) => {
+                      if (updatedStatus.state === "granted") {
+                        setHasCameraAccess(true);
+                      }
+                    });
                 };
+
+                permissionStatus.onchange = handlePermissionChange;
+                permissionStatus.addEventListener(
+                  "change",
+                  handlePermissionChange
+                );
+
                 permissionStatus
                   .request()
                   .then((result) => {
@@ -39,6 +50,8 @@ const ARScene = () => {
       });
     }
   }, []);
+
+  // ... (rest of your code)
 
   return (
     <div style={{ height: "100vh" }}>
