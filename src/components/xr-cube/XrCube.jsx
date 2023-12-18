@@ -18,7 +18,7 @@ const XrCube = () => {
       <ambientLight />
       <mesh ref={cubeRef}>
         <boxGeometry />
-        <meshStandardMaterial color={"red"} />
+        <meshStandardMaterial color={"yellow"} />
       </mesh>
     </>
   );
