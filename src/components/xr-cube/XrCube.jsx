@@ -24,4 +24,4 @@ const XrCube = () => {
   );
 }
 
-export default XrCube 
+export default XrCube

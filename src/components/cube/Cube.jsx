@@ -18,7 +18,7 @@ const Cube = () => {
       <ambientLight />
       <mesh ref={cubeRef}>
         <boxGeometry />
-        <meshStandardMaterial color={"green"} />
+        <meshStandardMaterial color={"yellow"} />
       </mesh>
     </>
   );
