@@ -1,12 +1,12 @@
 import { Route, Routes } from 'react-router-dom'
 
-import XrCube from './components/xr-cube/XrCube';
+import XrCubeComponent from './components/xr-cube/XrCubeComponent';
 
 
 const App = () => {
   return (
     <Routes>
-      <Route path="/" element={<XrCube />} />
+      <Route path="/" element={<XrCubeComponent />} />
     </Routes>
   );
 }
