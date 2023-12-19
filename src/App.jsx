@@ -1,12 +1,12 @@
 import { Route, Routes } from 'react-router-dom'
 
-import GeoARDemo from './components/GeoARDemo';
+import XrCube from './components/xr-cube/XrCube';
 
 
 const App = () => {
   return (
     <Routes>
-      <Route path="/" element={<GeoARDemo />} />
+      <Route path="/" element={<XrCube />} />
     </Routes>
   );
 }
